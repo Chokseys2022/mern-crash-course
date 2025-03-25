@@ -1,16 +1,40 @@
 import express from "express";
 import dotenv from "dotenv";
+import { connectDB } from "./config/db.js";
+import Product from "./models/products.model.js";
 
 dotenv.config();
 
 const app = express();
+app.use(express.json()); // Middleware to parse JSON data
 
-app.get("/products", (req, res) => {});
+// Connect to the database before starting the server
+connectDB();
 
-console.log(process.env.MONGO_URI);
+app.post("/api/products", async (req, res) => {
+  try {
+    const { name, price, image } = req.body;
 
-app.listen(5000, () => console.log("server is running at http://localhost:5000"));   
+    // ✅ Correct validation inside the route handler
+    if (!name || !price || !image) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
 
+    // ✅ Create and save new product
+    const newProduct = new Product({ name, price, image });
+    await newProduct.save();
 
+    res.status(201).json({ success: true, data: newProduct });
+  } catch (error) {
+    console.error("Error creating product:", error.message);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+});
 
+// Start the server
+const PORT = process.env.PORT || 5001;
+app.listen(PORT, () => {
+  console.log(`Server started at http://localhost:${PORT}`);
+});
 
+export default app;
