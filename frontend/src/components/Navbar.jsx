@@ -4,6 +4,7 @@ import { PlusSquareIcon } from "@chakra-ui/icons";
 import { IoMoon } from "react-icons/io5";
 import { LuSun } from "react-icons/lu";
 
+
 const Navbar = () => {
 	const { colorMode, toggleColorMode } = useColorMode();
 
@@ -28,6 +29,7 @@ const Navbar = () => {
 				>
 					<Link to={"/"}>Product Store 🛒</Link>
 				</Text>
+       
 
 				<HStack spacing={2} alignItems={"center"}>
 					<Link to={"/create"}>
